@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Class-Path: javax.persistence-com.app.soa.api-2.2.jar javax.transaction.jar javax.
+ annotation.jar javax.servlet.jar javax.jms.jar javax.persistence.jar
+ javax.ejb.jar javax.resource.jar javax.servlet.jsp.jar javax.servlet.
+ jsp.jstl.jar
+
