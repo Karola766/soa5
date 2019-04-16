@@ -27,8 +27,7 @@ public class Book implements Serializable {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "booksSequence")
-    @SequenceGenerator(name = "booksSequence", sequenceName = "books_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;

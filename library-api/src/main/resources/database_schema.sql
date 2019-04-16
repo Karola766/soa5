@@ -1,7 +1,5 @@
-CREATE SEQUENCE books_sequence MINVALUE 100;
-
 CREATE TABLE library (
-                        id                      INTEGER PRIMARY KEY DEFAULT nextval('books_sequence'),
+                        id                      INTEGER PRIMARY KEY DEFAULT AUTO_INCREMENT,
                         author_first_name       VARCHAR(50) NOT NULL,
                         author_second_name      VARCHAR(50) NOT NULL,
                         title                   VARCHAR(200) NOT NULL,

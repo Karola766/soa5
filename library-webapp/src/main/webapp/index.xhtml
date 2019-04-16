@@ -5,10 +5,14 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
-
+<title> Biblioteka</title>
 </h:head>
 <h:body>
 
+    <f:facet name="last">
+        <!-- load css, js or others -->
+        <h:outputStylesheet name= "css/custom.css" />
+    </f:facet>
     <h:form id="form">
         <p:growl id="msgs" showDetail="true"/>
 
@@ -16,48 +20,48 @@
                      editable="true"
                      style="margin-bottom:20px">
             <f:facet name="header">
-                Books
+                Książki
             </f:facet>
 
             <p:ajax event="rowEdit" listener="#{booksView.onRowEdit}" update=":form:msgs"/>
             <p:ajax event="rowEditCancel" listener="#{booksView.onRowCancel}" update=":form:msgs"/>
 
-            <p:column headerText="Author's First Name">
+            <p:column headerText="Imię">
                 <p:cellEditor>
                     <f:facet name="output"><h:outputText value="#{book.authorFirstName}"/></f:facet>
                     <f:facet name="input"><p:inputText value="#{book.authorFirstName}" style="width:100%"/></f:facet>
                 </p:cellEditor>
             </p:column>
 
-            <p:column headerText="Author's Second Name">
+            <p:column headerText="Nazwisko">
                 <p:cellEditor>
                     <f:facet name="output"><h:outputText value="#{book.authorSecondName}"/></f:facet>
                     <f:facet name="input"><p:inputText value="#{book.authorSecondName}" style="width:100%"/></f:facet>
                 </p:cellEditor>
             </p:column>
 
-            <p:column headerText="Title">
+            <p:column headerText="Tytuł">
                 <p:cellEditor>
                     <f:facet name="output"><h:outputText value="#{book.title}"/></f:facet>
                     <f:facet name="input"><p:inputText value="#{book.title}" style="width:100%"/></f:facet>
                 </p:cellEditor>
             </p:column>
 
-            <p:column headerText="ISBN-13">
+            <p:column headerText="ISBN">
                 <p:cellEditor>
                     <f:facet name="output"><h:outputText value="#{book.isbn}"/></f:facet>
                     <f:facet name="input"><p:inputText value="#{book.isbn}" style="width:100%"/></f:facet>
                 </p:cellEditor>
             </p:column>
 
-            <p:column headerText="Year">
+            <p:column headerText="Rok">
                 <p:cellEditor>
                     <f:facet name="output"><h:outputText value="#{book.year}"/></f:facet>
                     <f:facet name="input"><p:inputText value="#{book.year}" style="width:100%"/></f:facet>
                 </p:cellEditor>
             </p:column>
 
-            <p:column headerText="Price">
+            <p:column headerText="Cena">
                 <p:cellEditor>
                     <f:facet name="output"><h:outputText value="#{book.price}"/></f:facet>
                     <f:facet name="input"><p:inputText value="#{book.price}" style="width:100%"/></f:facet>
@@ -78,31 +82,31 @@
     </h:form>
 
     <h:form>
-        <p:dialog header="Add a new book" widgetVar="bookDialog" modal="true" showEffect="fade" hideEffect="fade"
+        <p:dialog header="Dodaj książkę" widgetVar="bookDialog" modal="true" showEffect="fade" hideEffect="fade"
                   resizable="false">
             <p:outputPanel style="text-align:center;">
                 <p:panelGrid columns="2" columnClasses="label,value">
 
-                    <h:outputText value="Author's First Name:"/>
+                    <h:outputText value="Imię:"/>
                     <h:inputText value="#{booksView.newBookAuthorFirstName}"/>
 
-                    <h:outputText value="Author's Second Name:"/>
+                    <h:outputText value="Nazwisko:"/>
                     <h:inputText value="#{booksView.newBookAuthorSecondName}"/>
 
-                    <h:outputText value="Title:"/>
+                    <h:outputText value="Tytuł:"/>
                     <h:inputText value="#{booksView.newBookTitle}"/>
 
-                    <h:outputText value="ISBN-13:"/>
+                    <h:outputText value="ISBN:"/>
                     <h:inputText value="#{booksView.newBookIsbn}"/>
 
-                    <h:outputText value="Year:"/>
+                    <h:outputText value="Rok:"/>
                     <h:inputText value="#{booksView.newBookYear}"/>
 
-                    <h:outputText value="Price:"/>
+                    <h:outputText value="Cena:"/>
                     <h:inputText value="#{booksView.newBookPrice}"/>
                 </p:panelGrid>
 
-                <p:commandButton value="Submit" action="#{booksView.onAddNew()}"
+                <p:commandButton value="Wyślij" action="#{booksView.onAddNew()}"
                                  oncomplete="PF('bookDialog').hide();PF('booksDataTable').addRow();"/>
             </p:outputPanel>
         </p:dialog>
