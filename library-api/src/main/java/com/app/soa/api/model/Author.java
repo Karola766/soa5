@@ -10,8 +10,6 @@ public class Author implements Serializable {
     private Integer id;
     private String authorFirstName;
     private String authorSecondName;
-
-    @OneToMany(targetEntity=NewBook.class, mappedBy="author", fetch = FetchType.EAGER)
     private List<NewBook> books;
 
     public Author() {
@@ -51,6 +49,7 @@ public class Author implements Serializable {
         this.authorSecondName = authorSecondName;
     }
 
+    @OneToMany(targetEntity=NewBook.class, mappedBy="author", fetch = FetchType.EAGER)
     private List<NewBook> getBooks(){
         return this.books;
     }

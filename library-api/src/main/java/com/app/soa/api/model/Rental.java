@@ -8,12 +8,8 @@ import java.time.LocalDate;
 @Table(name = "rental")
 public class Rental implements Serializable {
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="book_id")
     private NewBook book;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="reader_id")
     private Reader reader;
 
     private LocalDate startDate;
@@ -41,7 +37,9 @@ public class Rental implements Serializable {
         this.id = id;
     }
 
-    public NewBook getBookId() {
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="book_id")
+    public NewBook getBook() {
         return this.book;
     }
 
@@ -49,6 +47,8 @@ public class Rental implements Serializable {
         this.book = book;
     }
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="reader_id")
     public Reader getReader() {
         return this.reader;
     }

@@ -10,8 +10,6 @@ public class Reader implements Serializable {
     private Integer id;
     private String readerFirstName;
     private String readerSecondName;
-
-    @OneToMany(targetEntity=Rental.class, mappedBy="reader", fetch = FetchType.EAGER)
     private List<Rental> rentals;
 
     public Reader() {
@@ -51,6 +49,7 @@ public class Reader implements Serializable {
         this.readerSecondName = readerSecondName;
     }
 
+    @OneToMany(targetEntity=Rental.class, mappedBy="reader", fetch = FetchType.EAGER)
     public List<Rental> getRentals(){
         return this.rentals;
     }

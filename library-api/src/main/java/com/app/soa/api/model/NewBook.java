@@ -9,13 +9,10 @@ import java.util.List;
 public class NewBook implements Serializable {
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="author_id", nullable = false)
     private Author author;
 
     private String title;
 
-    @OneToMany(targetEntity=Rental.class, mappedBy="book", fetch = FetchType.EAGER)
     private List<Rental> rentals;
 
     public NewBook() {
@@ -37,6 +34,8 @@ public class NewBook implements Serializable {
         this.id = id;
     }
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="author_id", nullable = false)
     public Author getAuthor() {
         return author;
     }
@@ -54,6 +53,7 @@ public class NewBook implements Serializable {
         this.title = title;
     }
 
+    @OneToMany(targetEntity=Rental.class, mappedBy="book", fetch = FetchType.EAGER)
     public List<Rental> getRentals(){
         return this.rentals;
     }

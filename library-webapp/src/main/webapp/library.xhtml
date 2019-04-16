@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Biblioteka</title>
+</h:head>
+<h:body>
+
+    <f:facet name="last">
+        <!-- load css, js or others -->
+        <h:outputStylesheet name= "css/custom.css" />
+    </f:facet>
+    <h:form id="form">
+        <p:growl id="msgs" showDetail="true"/>
+
+        <p:dataTable id="booksDataTable" widgetVar="booksDataTable" var="book" value="#{libraryView.books}"
+                     editable="true"
+                     style="margin-bottom:20px">
+            <f:facet name="header">
+                Książki
+            </f:facet>
+
+            <p:ajax event="rowEdit" listener="#{libraryView.onRowEdit}" update=":form:msgs"/>
+            <p:ajax event="rowEditCancel" listener="#{libraryView.onRowCancel}" update=":form:msgs"/>
+
+            <p:column headerText="Imię">
+                <p:cellEditor>
+                    <f:facet name="output"><h:outputText value="#{book.authorFirstName}"/></f:facet>
+                    <f:facet name="input"><p:inputText value="#{book.authorFirstName}" style="width:100%"/></f:facet>
+                </p:cellEditor>
+            </p:column>
+
+            <p:column headerText="Nazwisko">
+                <p:cellEditor>
+                    <f:facet name="output"><h:outputText value="#{book.authorSecondName}"/></f:facet>
+                    <f:facet name="input"><p:inputText value="#{book.authorSecondName}" style="width:100%"/></f:facet>
+                </p:cellEditor>
+            </p:column>
+
+            <p:column headerText="Tytuł">
+                <p:cellEditor>
+                    <f:facet name="output"><h:outputText value="#{book.title}"/></f:facet>
+                    <f:facet name="input"><p:inputText value="#{book.title}" style="width:100%"/></f:facet>
+                </p:cellEditor>
+            </p:column>
+
+            <p:column style="width:35px">
+                <p:rowEditor/>
+            </p:column>
+        </p:dataTable>
+
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <p:commandButton value="Add new row" styleClass="ui-priority-primary"
+                                 oncomplete="PF('bookDialog').show();"/>
+            </div>
+        </div>
+    </h:form>
+
+    <h:form>
+        <p:dialog header="Dodaj książkę" widgetVar="bookDialog" modal="true" showEffect="fade" hideEffect="fade"
+                  resizable="false">
+            <p:outputPanel style="text-align:center;">
+                <p:panelGrid columns="2" columnClasses="label,value">
+
+                    <h:outputText value="Imię:"/>
+                    <h:inputText value="#{booksView.newBookAuthorFirstName}"/>
+
+                    <h:outputText value="Nazwisko:"/>
+                    <h:inputText value="#{booksView.newBookAuthorSecondName}"/>
+
+                    <h:outputText value="Tytuł:"/>
+                    <h:inputText value="#{booksView.newBookTitle}"/>
+                </p:panelGrid>
+
+                <p:commandButton value="Wyślij" action="#{booksView.onAddNew()}"
+                                 oncomplete="PF('bookDialog').hide();PF('booksDataTable').addRow();"/>
+            </p:outputPanel>
+        </p:dialog>
+    </h:form>
+
+</h:body>
+</html>
