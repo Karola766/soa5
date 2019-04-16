@@ -59,7 +59,7 @@ public class LibraryView implements Serializable {
 
 
     public void onAddNew() {
-        Author authorToAdd = null;
+        Author authorToAdd = new Author(newBookAuthorFirstName, newBookAuthorSecondName);
 
         for(Author pom:authors){
             if(pom.getAuthorFirstName().equals(newBookAuthorFirstName)&& pom.getAuthorSecondName().equals(newBookAuthorSecondName)){
@@ -67,15 +67,15 @@ public class LibraryView implements Serializable {
                 break;
             }
         }
-        if(authorToAdd == null) {
-            authorToAdd = new Author(newBookAuthorFirstName, newBookAuthorSecondName);
-        }
 
         NewBook bookToAdd = new NewBook(newBookTitle, authorToAdd);
+        bookToAdd.setAuthor(authorToAdd);
 
         try {
+            authorToAdd = authorsDAO.persist(authorToAdd);
             bookToAdd = booksDAO.persist(bookToAdd);
             books.add(bookToAdd);
+            authors.add(authorToAdd);
             FacesMessage msg = new FacesMessage("New Book added", bookToAdd.getId().toString());
             FacesContext.getCurrentInstance().addMessage(null, msg);
         } catch (Exception ex) {

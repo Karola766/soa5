@@ -34,7 +34,7 @@ public class NewBook implements Serializable {
         this.id = id;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     @JoinColumn(name="author_id", nullable = false)
     public Author getAuthor() {
         return author;
@@ -53,7 +53,7 @@ public class NewBook implements Serializable {
         this.title = title;
     }
 
-    @OneToMany(targetEntity=Rental.class, mappedBy="book", fetch = FetchType.EAGER)
+    @OneToMany(targetEntity=Rental.class, mappedBy="book", fetch = FetchType.EAGER, orphanRemoval=true)
     public List<Rental> getRentals(){
         return this.rentals;
     }

@@ -49,7 +49,7 @@ public class Author implements Serializable {
         this.authorSecondName = authorSecondName;
     }
 
-    @OneToMany(targetEntity=NewBook.class, mappedBy="author", fetch = FetchType.EAGER)
+    @OneToMany(targetEntity=NewBook.class, mappedBy="author", fetch = FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
     private List<NewBook> getBooks(){
         return this.books;
     }

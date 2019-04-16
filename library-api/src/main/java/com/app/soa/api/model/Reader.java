@@ -49,7 +49,7 @@ public class Reader implements Serializable {
         this.readerSecondName = readerSecondName;
     }
 
-    @OneToMany(targetEntity=Rental.class, mappedBy="reader", fetch = FetchType.EAGER)
+    @OneToMany(targetEntity=Rental.class, mappedBy="reader", fetch = FetchType.EAGER, cascade=CascadeType.ALL, orphanRemoval=true)
     public List<Rental> getRentals(){
         return this.rentals;
     }
