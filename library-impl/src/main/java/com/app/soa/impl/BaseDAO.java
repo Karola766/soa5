@@ -1,6 +1,7 @@
 package com.app.soa.impl;
 
 import com.app.soa.api.IBaseDAO;
+import org.hibernate.transform.Transformers;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -35,7 +36,6 @@ public abstract class BaseDAO<T> implements IBaseDAO<T> {
     }
 
     public List<T> findAll() {
-
         Query q = getEntityManager().createQuery("SELECT e FROM " + entityClass.getName()
                 + " e");
         List<T> list = (List<T>) q.getResultList();
@@ -45,6 +45,12 @@ public abstract class BaseDAO<T> implements IBaseDAO<T> {
     public T find(Integer id) {
         T e = getEntityManager().find(entityClass, id);
         return e;
+    }
+
+    public List<T> getFromQuery(String query){
+        Query q = getEntityManager().createQuery(query);
+        List<T> list = (List<T>) q.getResultList();
+        return list;
     }
 
 }

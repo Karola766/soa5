@@ -56,32 +56,21 @@
         </div>
 
         <p:dataTable id="authorsDataTable" widgetVar="authorsDataTable" var="author" value="#{libraryView.foundAuthors}"
-                     editable="true"
                      style="margin-bottom:20px">
             <f:facet name="header">
                 Autorzy
             </f:facet>
 
             <p:column headerText="Imię">
-                <p:cellEditor>
-                    <f:facet name="output"><h:outputText value="#{author.authorFirstName}"/></f:facet>
-                </p:cellEditor>
+                    <h:outputText value="#{author.authorFirstName}"/>
             </p:column>
 
             <p:column headerText="Nazwisko">
-                <p:cellEditor>
-                    <f:facet name="output"><h:outputText value="#{author.authorSecondName}"/></f:facet>
-                </p:cellEditor>
+                    <h:outputText value="#{author.authorSecondName}"/>
             </p:column>
 
-            <p:column style="width:35px">
-                <p:rowEditor/>
-            </p:column>
         </p:dataTable>
-    </h:form>
 
-
-    <h:form>
         <p:dialog header="Znajdź czytelnika" widgetVar="readerDialog" modal="true" showEffect="fade" hideEffect="fade"
                   resizable="false">
             <p:outputPanel style="text-align:center;">
@@ -103,21 +92,23 @@
                     <h:inputText value="#{libraryView.newBookTitle}"/>
 
                     <h:outputText value="Początek wypożyczenia:"/>
-                    <h:inputText value="#{libraryView.newBookStartDate}"/>
+                    <h:inputText value="#{libraryView.newBookStartDate}">
+                        <f:converter converterId="DateConverter"/>
+                    </h:inputText>
 
                     <h:outputText value="Koniec wypożyczenia:"/>
-                    <h:inputText value="#{libraryView.newBookEndDate}"/>
+                    <h:inputText value="#{libraryView.newBookEndDate}">
+                        <f:converter converterId="DateConverter"/>
+                    </h:inputText>
 
                     <p:commandButton value="Najwięcej wypożyczeń" action="#{libraryView.setMax()}"/>
                 </p:panelGrid>
 
-                <p:commandButton value="Wyślij" action="#{libraryView.onFindReader()}"
-                                 oncomplete="PF('readerDialog').hide();PF('readersDataTable').show();PF('booksDataTable').onFindReader();">Znajdź czytelnika </p:commandButton>
+                <p:commandButton value="Wyślij" action="#{libraryView.onFindReader()}" update="@form"
+                                 oncomplete="PF('readerDialog').hide();">Znajdź czytelnika </p:commandButton>
             </p:outputPanel>
         </p:dialog>
-    </h:form>
 
-    <h:form>
         <p:dialog header="Dodaj książkę" widgetVar="bookDialog" modal="true" showEffect="fade" hideEffect="fade"
                   resizable="false">
             <p:outputPanel style="text-align:center;">
@@ -137,10 +128,7 @@
                                  oncomplete="PF('bookDialog').hide();PF('booksDataTable').addRow();">Dodaj nową książkę: </p:commandButton>
             </p:outputPanel>
         </p:dialog>
-    </h:form>
 
-
-    <h:form>
         <p:dialog header="Znajdź autora" widgetVar="authorDialog" modal="true" showEffect="fade" hideEffect="fade"
                   resizable="false">
             <p:outputPanel style="text-align:center;">
@@ -162,64 +150,55 @@
                     <h:inputText value="#{libraryView.newBookTitle}"/>
 
                     <h:outputText value="Początek wypożyczenia:"/>
-                    <h:inputText value="#{libraryView.newBookStartDate}"/>
+                    <h:inputText value="#{libraryView.newBookStartDate}">
+                        <f:converter converterId="DateConverter"/>
+                    </h:inputText>
 
                     <h:outputText value="Koniec wypożyczenia:"/>
-                    <h:inputText value="#{libraryView.newBookEndDate}"/>
+                    <h:inputText value="#{libraryView.newBookEndDate}">
+                        <f:converter converterId="DateConverter"/>
+                    </h:inputText>
 
                     <p:commandButton value="Najwięcej wypożyczeń" action="#{libraryView.setMax()}"/>
                 </p:panelGrid>
 
-                <p:commandButton value="Wyślij" action="#{libraryView.onFindAuthor()}"
-                                 oncomplete="PF('authorDialog').hide();PF('authorsDataTable').show();"/>
+                <p:commandButton value="Wyślij" action="#{libraryView.onFindAuthor()}" update="@form"/>
+                                 <!--oncomplete="PF('authorDialog').hide();"/>-->
             </p:outputPanel>
         </p:dialog>
 
-        <h:form>
+
             <div class="ui-g">
-                <div class="ui-g-12">
+                <div class="ui-g-10">
                     <p:commandButton value="Znajdź autora" styleClass="ui-priority-primary"
                                      oncomplete="PF('authorDialog').show(); "/>
                 </div>
             </div>
-        </h:form>
+
 
         <p:dataTable id="readersDataTable" widgetVar="readersDataTable" var="reader" value="#{libraryView.foundReaders}"
-                     editable="true"
                      style="margin-bottom:20px">
             <f:facet name="header">
                 Czytelnicy
             </f:facet>
 
             <p:column headerText="Imię">
-                <p:cellEditor>
-                    <f:facet name="output"><h:outputText value="#{reader.readerFirstName}"/></f:facet>
-                </p:cellEditor>
+                    <h:outputText value="#{reader.readerFirstName}"/>
             </p:column>
 
             <p:column headerText="Nazwisko">
-                <p:cellEditor>
-                    <f:facet name="output"><h:outputText value="#{reader.readerSecondName}"/></f:facet>
-                </p:cellEditor>
+                    <h:outputText value="#{reader.readerSecondName}"/>
             </p:column>
 
-            <p:column style="width:35px">
-                <p:rowEditor/>
-            </p:column>
+
         </p:dataTable>
-    </h:form>
 
-    <h:form>
         <div class="ui-g">
             <div class="ui-g-12">
                 <p:commandButton value="Znajdź czytelnika" styleClass="ui-priority-primary"
                                  oncomplete="PF('readerDialog').show();"/>
             </div>
         </div>
-    </h:form>
-
-    <h:form>
-        <h:outputText value="#{libraryView.pom}"/>
     </h:form>
 
 </h:body>

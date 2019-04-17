@@ -13,4 +13,6 @@ public interface IBaseDAO<T> {
     public List<T> findAll();
 
     public T find(Integer id);
+
+    public List<T> getFromQuery(String query);
 }
