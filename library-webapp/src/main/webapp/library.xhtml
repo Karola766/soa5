@@ -9,10 +9,6 @@
 </h:head>
 <h:body>
 
-    <f:facet name="last">
-        <!-- load css, js or others -->
-        <h:outputStylesheet name= "css/custom.css" />
-    </f:facet>
     <h:form id="form">
         <p:growl id="msgs" showDetail="true"/>
 
@@ -58,6 +54,67 @@
                                  oncomplete="PF('bookDialog').show();"/>
             </div>
         </div>
+
+        <p:dataTable id="authorsDataTable" widgetVar="authorsDataTable" var="author" value="#{libraryView.foundAuthors}"
+                     editable="true"
+                     style="margin-bottom:20px">
+            <f:facet name="header">
+                Autorzy
+            </f:facet>
+
+            <p:column headerText="Imię">
+                <p:cellEditor>
+                    <f:facet name="output"><h:outputText value="#{author.authorFirstName}"/></f:facet>
+                </p:cellEditor>
+            </p:column>
+
+            <p:column headerText="Nazwisko">
+                <p:cellEditor>
+                    <f:facet name="output"><h:outputText value="#{author.authorSecondName}"/></f:facet>
+                </p:cellEditor>
+            </p:column>
+
+            <p:column style="width:35px">
+                <p:rowEditor/>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+
+
+    <h:form>
+        <p:dialog header="Znajdź czytelnika" widgetVar="readerDialog" modal="true" showEffect="fade" hideEffect="fade"
+                  resizable="false">
+            <p:outputPanel style="text-align:center;">
+                <p:panelGrid columns="2" columnClasses="label,value">
+
+                    <h:outputText value="Imię czytelnika:"/>
+                    <h:inputText value="#{libraryView.newBookReaderFirstName}"/>
+
+                    <h:outputText value="Nazwisko czytelnika:"/>
+                    <h:inputText value="#{libraryView.newBookReaderSecondName}"/>
+
+                    <h:outputText value="Imię autora:"/>
+                    <h:inputText value="#{libraryView.newBookAuthorFirstName}"/>
+
+                    <h:outputText value="Nazwisko autora:"/>
+                    <h:inputText value="#{libraryView.newBookAuthorSecondName}"/>
+
+                    <h:outputText value="Tytuł ksiązki:"/>
+                    <h:inputText value="#{libraryView.newBookTitle}"/>
+
+                    <h:outputText value="Początek wypożyczenia:"/>
+                    <h:inputText value="#{libraryView.newBookStartDate}"/>
+
+                    <h:outputText value="Koniec wypożyczenia:"/>
+                    <h:inputText value="#{libraryView.newBookEndDate}"/>
+
+                    <p:commandButton value="Najwięcej wypożyczeń" action="#{libraryView.setMax()}"/>
+                </p:panelGrid>
+
+                <p:commandButton value="Wyślij" action="#{libraryView.onFindReader()}"
+                                 oncomplete="PF('readerDialog').hide();PF('readersDataTable').show();PF('booksDataTable').onFindReader();">Znajdź czytelnika </p:commandButton>
+            </p:outputPanel>
+        </p:dialog>
     </h:form>
 
     <h:form>
@@ -80,6 +137,89 @@
                                  oncomplete="PF('bookDialog').hide();PF('booksDataTable').addRow();">Dodaj nową książkę: </p:commandButton>
             </p:outputPanel>
         </p:dialog>
+    </h:form>
+
+
+    <h:form>
+        <p:dialog header="Znajdź autora" widgetVar="authorDialog" modal="true" showEffect="fade" hideEffect="fade"
+                  resizable="false">
+            <p:outputPanel style="text-align:center;">
+                <p:panelGrid columns="2" columnClasses="label,value">
+
+                    <h:outputText value="Imię autora:"/>
+                    <h:inputText value="#{libraryView.newBookAuthorFirstName}"/>
+
+                    <h:outputText value="Nazwisko autora:"/>
+                    <h:inputText value="#{libraryView.newBookAuthorSecondName}"/>
+
+                    <h:outputText value="Imię czytelnika:"/>
+                    <h:inputText value="#{libraryView.newBookReaderFirstName}"/>
+
+                    <h:outputText value="Nazwisko czytelnika:"/>
+                    <h:inputText value="#{libraryView.newBookAuthorSecondName}"/>
+
+                    <h:outputText value="Tytuł ksiązki:"/>
+                    <h:inputText value="#{libraryView.newBookTitle}"/>
+
+                    <h:outputText value="Początek wypożyczenia:"/>
+                    <h:inputText value="#{libraryView.newBookStartDate}"/>
+
+                    <h:outputText value="Koniec wypożyczenia:"/>
+                    <h:inputText value="#{libraryView.newBookEndDate}"/>
+
+                    <p:commandButton value="Najwięcej wypożyczeń" action="#{libraryView.setMax()}"/>
+                </p:panelGrid>
+
+                <p:commandButton value="Wyślij" action="#{libraryView.onFindAuthor()}"
+                                 oncomplete="PF('authorDialog').hide();PF('authorsDataTable').show();"/>
+            </p:outputPanel>
+        </p:dialog>
+
+        <h:form>
+            <div class="ui-g">
+                <div class="ui-g-12">
+                    <p:commandButton value="Znajdź autora" styleClass="ui-priority-primary"
+                                     oncomplete="PF('authorDialog').show(); "/>
+                </div>
+            </div>
+        </h:form>
+
+        <p:dataTable id="readersDataTable" widgetVar="readersDataTable" var="reader" value="#{libraryView.foundReaders}"
+                     editable="true"
+                     style="margin-bottom:20px">
+            <f:facet name="header">
+                Czytelnicy
+            </f:facet>
+
+            <p:column headerText="Imię">
+                <p:cellEditor>
+                    <f:facet name="output"><h:outputText value="#{reader.readerFirstName}"/></f:facet>
+                </p:cellEditor>
+            </p:column>
+
+            <p:column headerText="Nazwisko">
+                <p:cellEditor>
+                    <f:facet name="output"><h:outputText value="#{reader.readerSecondName}"/></f:facet>
+                </p:cellEditor>
+            </p:column>
+
+            <p:column style="width:35px">
+                <p:rowEditor/>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+
+    <h:form>
+        <div class="ui-g">
+            <div class="ui-g-12">
+                <p:commandButton value="Znajdź czytelnika" styleClass="ui-priority-primary"
+                                 oncomplete="PF('readerDialog').show();"/>
+            </div>
+        </div>
+    </h:form>
+
+    <h:form>
+        <h:outputText value="#{libraryView.pom}"/>
     </h:form>
 
 </h:body>

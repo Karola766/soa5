@@ -10,11 +10,22 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Properties;
 
 @Named
 @SessionScoped
+@PersistenceContext(
+        name="DAO",
+        unitName="Lab5"  // defined in a persistence.xml file
+)
 public class LibraryView implements Serializable {
     @EJB(lookup = "java:global/library-impl/NewBookDAO!com.app.soa.api.IRemoteNewBookDAO")
     private INewBookDAO booksDAO;
@@ -33,9 +44,21 @@ public class LibraryView implements Serializable {
     private List<Reader> readers;
     private List<Rental> rentals;
 
+    private List<Author> foundAuthors;
+    private List<Reader> foundReaders;
+
     private String newBookAuthorFirstName;
     private String newBookAuthorSecondName;
     private String newBookTitle;
+    private String newBookReaderFirstName;
+    private String newBookReaderSecondName;
+    private LocalDate newBookStartDate;
+    private LocalDate newBookEndDate;
+    private String pom = "yo";
+
+    private Boolean Max=Boolean.FALSE;
+
+    protected EntityManager entityManager;
 
     @PostConstruct
     public void init() {
@@ -57,6 +80,130 @@ public class LibraryView implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
+    public void setMax(){
+        this.Max=!this.Max;
+    }
+
+    public void onFindAuthor(){
+        pom="been";
+        String query_select = "SELECT authorFirstName, authorSecondName ";
+        String query_from = "FROM Author";
+        String query_where = " WHERE ";
+        FacesMessage msg = new FacesMessage("on find", "been in there");
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+        if(!this.newBookAuthorFirstName.isEmpty()){
+            query_select = query_select.join(" authorFirstName == " + this.newBookAuthorFirstName);
+        }else if(!this.newBookAuthorSecondName.isEmpty()){
+            if(query_where.length()>8)query_where = query_where.join(" AND");
+            query_where = query_where.join(" authorSecondName == " + this.newBookAuthorSecondName);
+        }else if(!this.newBookTitle.isEmpty()){
+            if(query_where.length()>8)query_where=query_where.join(" AND");
+            query_where = query_where.join(" title == " + this.newBookTitle);
+            query_from = query_from.join(", Book");
+        }else if(!this.newBookReaderFirstName.isEmpty()){
+            if(query_where.length()>8)query_where = query_where.join(" AND");
+            query_where = query_where.join(" readerFirstName == " + this.newBookReaderFirstName);
+            query_from = query_from.join(", Reader");
+        }else if(!this.newBookReaderSecondName.isEmpty()){
+            if(query_where.length()>8)query_where = query_where.join(" AND");
+            query_where = query_where.join(" readerSecondName == " + this.newBookReaderSecondName);
+            if(!query_from.contains("Reader")) query_from = query_from.join(", Reader");
+        }else if(this.newBookStartDate!=null){
+            if(query_where.length()>8)query_where = query_where.join(" AND");
+            query_where = query_where.join(" startDate >= " + this.newBookStartDate);
+            if(!query_from.contains("Rental")) query_from = query_from.join(", Rental");
+        }else if(this.newBookEndDate!=null){
+            if(query_where.length()>8)query_where = query_where.join(" AND");
+            query_where = query_where.join(" endDate <= " + this.newBookEndDate);
+            if(!query_from.contains("Rental")) query_from = query_from.join(", Rental");
+        }else if(this.Max.equals(true)){
+            if(!query_from.contains("Book")) query_from = query_from.join(", Book");
+            query_where = query_where.join(" GROUP BY Author HAVING MAX(rentals.length() );");
+        }
+        String query = query_select.join(query_from, query_where);
+        askAuthorQuery(query);
+    }
+
+    public void askAuthorQuery(String qu){
+        try {
+            pom="there";
+            Properties props = new Properties();
+            InitialContext ctx = new InitialContext(props);
+
+            entityManager = (javax.persistence.EntityManager)ctx.lookup(
+                            "java:comp/env/DAO"
+                    );
+
+            TypedQuery query = entityManager.createQuery(qu, String.class);
+            List<String> ResultList = query.getResultList();
+            FacesMessage msg = new FacesMessage("Query made", (String)query.getSingleResult());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+
+        }catch(NamingException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void onFindReader(){
+        pom="been";
+        String query_select = "SELECT readerFirstName, readerSecondName ";
+        String query_from = "FROM Reader";
+        String query_where = " WHERE ";
+        FacesMessage msg = new FacesMessage("on find", "been in there");
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+        if(!this.newBookReaderFirstName.isEmpty()){
+            query_select = query_select.join(" readerFirstName == " + this.newBookReaderFirstName);
+        }else if(!this.newBookReaderSecondName.isEmpty()){
+            if(query_where.length()>8)query_where = query_where.join(" AND");
+            query_where = query_where.join(" readerSecondName == " + this.newBookReaderSecondName);
+        }else if(!this.newBookTitle.isEmpty()){
+            if(query_where.length()>8)query_where=query_where.join(" AND");
+            query_where = query_where.join(" title == " + this.newBookTitle);
+            query_from = query_from.join(", Book");
+        }else if(!this.newBookAuthorFirstName.isEmpty()){
+            if(query_where.length()>8)query_where = query_where.join(" AND");
+            query_where = query_where.join(" authorFirstName == " + this.newBookAuthorFirstName);
+            query_from = query_from.join(", Author");
+        }else if(!this.newBookAuthorSecondName.isEmpty()){
+            if(query_where.length()>8)query_where = query_where.join(" AND");
+            query_where = query_where.join(" authorSecondName == " + this.newBookAuthorSecondName);
+            if(!query_from.contains("Author")) query_from = query_from.join(", Author");
+        }else if(this.newBookStartDate!=null){
+            if(query_where.length()>8)query_where = query_where.join(" AND");
+            query_where = query_where.join(" startDate >= " + this.newBookStartDate);
+            if(!query_from.contains("Rental")) query_from = query_from.join(", Rental");
+        }else if(this.newBookEndDate!=null){
+            if(query_where.length()>8)query_where = query_where.join(" AND");
+            query_where = query_where.join(" endDate <= " + this.newBookEndDate);
+            if(!query_from.contains("Rental")) query_from = query_from.join(", Rental");
+        }else if(this.Max.equals(true)){
+            if(!query_from.contains("Book")) query_from = query_from.join(", Book");
+            query_where = query_where.join(" GROUP BY Author HAVING MAX(rentals.length() );");
+        }
+        String query = query_select.join(query_from, query_where);
+        askReaderQuery(query);
+
+    }
+
+    public void askReaderQuery(String qu){
+        try {
+            pom="there";
+            Properties props = new Properties();
+            InitialContext ctx = new InitialContext(props);
+
+            entityManager = (javax.persistence.EntityManager)ctx.lookup(
+                    "java:comp/env/DAO"
+            );
+
+            TypedQuery query = entityManager.createQuery(qu, String.class);
+            List<String> ResultList = query.getResultList();
+            FacesMessage msg = new FacesMessage("Query made", (String)query.getSingleResult());
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+
+        }catch(NamingException e){
+            e.printStackTrace();
+        }
+    }
 
     public void onAddNew() {
         Author authorToAdd = new Author(newBookAuthorFirstName, newBookAuthorSecondName);
@@ -138,5 +285,61 @@ public class LibraryView implements Serializable {
 
     public void setNewBookTitle(String newBookTitle) {
         this.newBookTitle = newBookTitle;
+    }
+
+    public String getNewBookReaderFirstName(){
+        return this.newBookReaderFirstName;
+    }
+
+    public void setNewBookReaderFirstName(String newBookReaderFirstName){
+        this.newBookReaderFirstName= newBookReaderFirstName;
+    }
+
+    public String getNewBookReaderSecondName(){
+        return this.newBookReaderSecondName;
+    }
+
+    public void setNewBookReaderSecondName(String newBookReaderSecondName){
+        this.newBookReaderSecondName = newBookReaderSecondName;
+    }
+
+    public LocalDate getNewBookStartDate(){
+        return this.newBookStartDate;
+    }
+
+    public void setNewBookStartDate( LocalDate newBookStartDate){
+        this.newBookStartDate = newBookStartDate;
+    }
+
+    public LocalDate getNewBookEndDate(){
+        return this.newBookEndDate;
+    }
+
+    public void setNewBookEndDate(LocalDate newBookEndDate){
+        this.newBookEndDate = newBookEndDate;
+    }
+
+    public List<Author> getFoundAuthors(){
+        return this.foundAuthors;
+    }
+
+    public void setFoundAuthors(List<Author> foundAuthors){
+        this.foundAuthors = foundAuthors;
+    }
+
+    public List<Reader> getFoundReaders(){
+        return this.foundReaders;
+    }
+
+    public void setFoundReaders(List<Reader> foundReaders){
+        this.foundReaders = foundReaders;
+    }
+
+    public String getPom(){
+        return this.pom;
+    }
+
+    public void setPom(String p){
+        this.pom=p;
     }
 }

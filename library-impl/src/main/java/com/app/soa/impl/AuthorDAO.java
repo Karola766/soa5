@@ -11,6 +11,7 @@ import javax.ejb.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+
 @Singleton
 @Remote(IRemoteAuthorDAO.class)
 @Local(ILocalAuthorDAO.class)
@@ -27,4 +28,5 @@ public class AuthorDAO extends BaseDAO<Author> implements IAuthorDAO {
     protected EntityManager getEntityManager() {
         return entityManager;
     }
+
 }
